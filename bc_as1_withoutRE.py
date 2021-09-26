@@ -3,7 +3,7 @@ NOT using RE
 Bio Computing Assignment 1, String Manipulation "without" Regular Expression
 2016253072
 명수환(Myeong Suhwan)
-2에서 5 사이의 크기의 시퀀스 세그먼트가 3회 이상 연속적으로 반복될 때 저복잡도 영역이 정의된다
+Suppose a low-complexity region is defined when the sequence segment of size between 2 and 5 is repeated consecutively at least 3 times.
 ex) TAA TAA TAA 
 GTA GTA GTA
 '''
@@ -14,7 +14,7 @@ start_time = time.time()
 genes = ['T','A','G','C']
 
 data_rand = ""
-num = 5000000 # * How many genes you wanna make?
+num = 5000 # * How many genes you wanna make?
 while num:
     data_rand += genes[random.randint(0,3)]
     num -= 1
@@ -48,10 +48,10 @@ print("data length : ",len(data))
 
 index = 0
 
-pattern_size = 5 # 초기화
+pattern_size = 5 # initialize
 start_pos = 0
 while start_pos + 5< len(data):
-    # 초기화
+    # initialize
     buffer = [0,0,0,0,0]
     tmp_buffer = [0,0,0,0,0]
     pattern_found = ""
@@ -60,7 +60,8 @@ while start_pos + 5< len(data):
     #print("start _ :",start_pos)
     
     
-    # * 처음 10개 데이터
+    # * from dataset, first 5 data is into buffer.
+    # * next 5 data is into temporary buffer.
     for i in range(len(buffer)):
         
         buffer[i] = data[index]
@@ -74,11 +75,11 @@ while start_pos + 5< len(data):
             break
     # print(buffer)
     # print(tmp_buffer)
-    if buffer == tmp_buffer: # * 첫 5개 패턴이 같은 경우
+    if buffer == tmp_buffer: # * Case of the pattern size is 5
         for i in range(len(tmp_buffer)):
             tmp_buffer[i] = data[index]
             index += 1
-        if buffer == tmp_buffer: #! size-5 패턴 found
+        if buffer == tmp_buffer: #! size-5 pattern is found
             for v in buffer:
                 pattern_found += v
             print("[index]", start_pos, end = " ")
@@ -87,16 +88,16 @@ while start_pos + 5< len(data):
             
             start_pos += pattern_size*3
         
-    else: # * 패턴이 5개가 아닐 경우
+    else: # * Case of the pattern size is less than 5
         
         while pattern_size > 2:
             pattern_size -= 1
             tmp_buffer.pop(-1)
-            tmp_buffer.insert(0, buffer[-1]) #밀어내기
+            tmp_buffer.insert(0, buffer[-1]) #Push out
             buffer.pop(-1)
             index -= 1
             
-            if buffer[:pattern_size] == tmp_buffer[:pattern_size]: # * p-size개 비교
+            if buffer[:pattern_size] == tmp_buffer[:pattern_size]: # * Comparison : p-size
                 #print("=> p-size", pattern_size)
                 
                 index -= (5-pattern_size)
