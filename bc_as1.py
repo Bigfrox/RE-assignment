@@ -9,11 +9,14 @@ GTA GTA GTA
 
 import re
 import random
+import time
+
+start_time = time.time()
 
 genes = ['T','A','G','C']
 
 data_rand = ""
-num = 20 # * How many genes you wanna make?
+num = 5000000 # * How many genes you wanna make?
 while num:
     data_rand += genes[random.randint(0,3)]
     num -= 1
@@ -54,3 +57,6 @@ for v in found_list:
     print("\n")
     start_offset = index + len(v)*3
 #print(index)
+
+
+print("Time Elapsed : ", time.time() - start_time)

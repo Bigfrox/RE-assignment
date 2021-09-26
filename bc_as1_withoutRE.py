@@ -1,44 +1,52 @@
 '''
 NOT using RE
-Bio Computing Assignment 1, String Manipulation with Regular Expression
+Bio Computing Assignment 1, String Manipulation "without" Regular Expression
 2016253072
 명수환(Myeong Suhwan)
 2에서 5 사이의 크기의 시퀀스 세그먼트가 3회 이상 연속적으로 반복될 때 저복잡도 영역이 정의된다
 ex) TAA TAA TAA 
 GTA GTA GTA
-끝에 패턴이 있는 경우 잡아야함
 '''
 import random
+import time
 
+start_time = time.time()
 genes = ['T','A','G','C']
 
 data_rand = ""
-num = 5 # * How many genes you wanna make?
+num = 5000000 # * How many genes you wanna make?
 while num:
     data_rand += genes[random.randint(0,3)]
     num -= 1
 
 data_rand += "AGCAGCAGCAGCTATATGCGCGCAGCAGCAGCTAGTAGTA G T GGTCC GGTCC G GT C C"
 #print(data)
-
+#test file
 data = ""
+filename = 'assignment1_input.txt'
+input_file = open(filename, 'r')
+
+with open(filename, 'r') as file:
+    line = None
+    line = file.readline() # comment
+    if(line[0] == '>'):
+        print("This is comment")
+    while line != '':
+        line = file.readline()
+        data += line.strip('\n')
+
 data += data_rand
 
+data = data.replace(" ", "")
+#data = data.replace("\n", "")
 #!
-data = "AGAGAGTTATAAGTGGTAGTAGTAGG"
+#data = "GCTCTCTATATACGTCCCGTCCCGTCCA"
 print(data)
+print("data length : ",len(data))
 
 
 
 index = 0
-
-# * 2개짜리 TATAT AGCTA
-# if buffer[0] == buffer[2] == buffer[4] and buffer[1] == buffer[3] == tmp_buffer[0]:
-#     print("!!")
-#     pattern_found += buffer[0]
-#     pattern_found += buffer[1]
-#     pattern_found *= 3
-#     print(pattern_found)
 
 pattern_size = 5 # 초기화
 start_pos = 0
@@ -47,10 +55,9 @@ while start_pos + 5< len(data):
     buffer = [0,0,0,0,0]
     tmp_buffer = [0,0,0,0,0]
     pattern_found = ""
-    print("시작")
     index = start_pos
-    print(index)
-    
+    pattern_size = 5
+    #print("start _ :",start_pos)
     
     
     # * 처음 10개 데이터
@@ -58,15 +65,15 @@ while start_pos + 5< len(data):
         
         buffer[i] = data[index]
         index += 1
-        if index == len(data):
+        if index >= len(data):
             break
     for i in range(len(tmp_buffer)):
         tmp_buffer[i] = data[index]
         index += 1
-        if index == len(data):
+        if index >= len(data):
             break
-    print(buffer)
-    print(tmp_buffer)
+    # print(buffer)
+    # print(tmp_buffer)
     if buffer == tmp_buffer: # * 첫 5개 패턴이 같은 경우
         for i in range(len(tmp_buffer)):
             tmp_buffer[i] = data[index]
@@ -74,8 +81,11 @@ while start_pos + 5< len(data):
         if buffer == tmp_buffer: #! size-5 패턴 found
             for v in buffer:
                 pattern_found += v
-            print("[Pattern Found]")
-            print(pattern_found)
+            print("[index]", start_pos, end = " ")
+            print("[Pattern]", pattern_found*3)
+            print("\n")
+            
+            start_pos += pattern_size*3
         
     else: # * 패턴이 5개가 아닐 경우
         
@@ -95,45 +105,21 @@ while start_pos + 5< len(data):
                 for i in range(len(buffer)):
                     tmp_buffer[i] = data[index]
                     index += 1
-                print(tmp_buffer)
+                #print(tmp_buffer)
                 for i in range(5-pattern_size):
                     tmp_buffer.pop(-1)
-                print(tmp_buffer)
+                #print(tmp_buffer)
                 #print(data[index])
                 if buffer == tmp_buffer:
                     for v in buffer:
                         pattern_found += v
-                    print("[Pattern Found]")
-                    print(pattern_found)
+                    print("[index]", start_pos, end = " ")
+                    print("[Pattern]", pattern_found*3)
+                    print("\n")
+                    start_pos += pattern_size*3
                     break
-        if pattern_size <= 2:
-            print("Couldn't find a pattern")
+        
 
     start_pos += 1
 
-
-    
-        
-
-
-
-# while(index < len(data)):
-#     for i in range(len(buffer)):
-#         buffer[i] = data[index]
-#         index += 1
-        
-    
-    
-    
-#     if tmp_buffer == buffer:
-#         buffer.pop(0)
-
-#     break
-
-
-# if tmp_buffer == buffer:
-#     print("!!")
-# buffer.pop(0)
-# print(buffer)
-# buffer.append('X')
-# print(buffer)
+print("Time Elapsed : ", time.time() - start_time)
