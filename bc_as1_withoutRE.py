@@ -14,12 +14,12 @@ start_time = time.time()
 genes = ['T','A','G','C']
 
 data_rand = ""
-num = 5000 # * How many genes you wanna make?
+num = 100 # * How many genes you wanna make?
 while num:
     data_rand += genes[random.randint(0,3)]
     num -= 1
 
-data_rand += "AGCAGCAGCAGCTATATGCGCGCAGCAGCAGCTAGTAGTA G T GGTCC GGTCC G GT C C"
+data_rand += "CCCCCCTATATAAGCAGCAGCAGCTATATGCGCGCAGCAGCAGCTAGTAGTA G T GGTCC GGTCC G GT C CTTTTTTGGGG GGGG"
 #print(data)
 #test file
 data = ""
@@ -50,7 +50,7 @@ index = 0
 
 pattern_size = 5 # initialize
 start_pos = 0
-while start_pos + 5< len(data):
+while start_pos + 5 < len(data):
     # initialize
     buffer = [0,0,0,0,0]
     tmp_buffer = [0,0,0,0,0]
@@ -75,10 +75,14 @@ while start_pos + 5< len(data):
             break
     # print(buffer)
     # print(tmp_buffer)
+    # print(len(data))
     if buffer == tmp_buffer: # * Case of the pattern size is 5
+        tmp_buffer = [0,0,0,0,0]
         for i in range(len(tmp_buffer)):
             tmp_buffer[i] = data[index]
+            
             index += 1
+            
         if buffer == tmp_buffer: #! size-5 pattern is found
             for v in buffer:
                 pattern_found += v
@@ -87,10 +91,20 @@ while start_pos + 5< len(data):
             print("\n")
             
             start_pos += pattern_size*3
+            start_pos -= 1
+    elif buffer[0] == buffer[1] == buffer[2] == buffer[3] == buffer[4] == tmp_buffer[0]:
+        pattern_size = 2
+        pattern_found += buffer[0]*2
+        start_pos += pattern_size*3
+        start_pos -= 1
+        print("[index]", start_pos, end = " ")
+        print("[Pattern]", pattern_found*3)
+        print("\n")
         
     else: # * Case of the pattern size is less than 5
         
         while pattern_size > 2:
+        
             pattern_size -= 1
             tmp_buffer.pop(-1)
             tmp_buffer.insert(0, buffer[-1]) #Push out
@@ -100,7 +114,7 @@ while start_pos + 5< len(data):
             if buffer[:pattern_size] == tmp_buffer[:pattern_size]: # * Comparison : p-size
                 #print("=> p-size", pattern_size)
                 
-                index -= (5-pattern_size)
+                index -= (5-pattern_size-1)
                 #print(index)
                 #tmp_buffer = [0,0,0,0,0]
                 for i in range(len(buffer)):
@@ -122,5 +136,5 @@ while start_pos + 5< len(data):
         
 
     start_pos += 1
-
+    
 print("Time Elapsed : ", time.time() - start_time)
