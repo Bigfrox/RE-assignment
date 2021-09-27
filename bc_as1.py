@@ -6,6 +6,13 @@ Bio Computing Assignment 1, String Manipulation with Regular Expression
 ex) TAA TAA TAA 
 GTA GTA GTA
 '''
+#// Case insensitvie 
+# ? print("No Input file")
+# ? if input has nothing, print("No DNA Sequence")
+# ? if input is not a DNA sequence, print ("No DNA Sequence")
+# ? if, doens't follow FASTA format, print("No Correct Format")
+# ? low complexity가 없으면 없다고 출력
+# ? 4번이상반복되는 경우?
 
 import re
 import random
@@ -16,12 +23,12 @@ start_time = time.time()
 genes = ['T','A','G','C']
 
 data_rand = ""
-num = 5000000 # * How many genes you wanna make?
+num = 5000 # * How many genes you wanna make?
 while num:
     data_rand += genes[random.randint(0,3)]
     num -= 1
 
-data_rand += "AGCAGCAGCAGCTATATGCGCGCAGCAGCAGCTAGTAGTA G T GGTCC GGTCC G GT C C"
+data_rand += "AGCAGCAGCAGCTATATGCGCGCAGCAGCAGCTAGTAGTA G T GGTCC GGTCC G GT C CtTtTtT"
 #print(data)
 
 data_re = re.compile(r'([AGCT]{2,5})\1{2,}') # 왜 {2,}로 해야 잡힐까
@@ -42,6 +49,7 @@ with open(filename, 'r') as file:
 
 data += data_rand
 data = data.replace(" ", "")
+data = data.upper()
 print(">>>>",data)
 
 found_list = data_re.findall(data)
