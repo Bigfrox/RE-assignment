@@ -6,65 +6,95 @@ Bio Computing Assignment 1, String Manipulation with Regular Expression
 ex) TAA TAA TAA 
 GTA GTA GTA
 '''
-#// Case insensitvie 
-# ? print("No Input file")
-# ? if input has nothing, print("No DNA Sequence")
-# ? if input is not a DNA sequence, print ("No DNA Sequence")
-# ? if, doens't follow FASTA format, print("No Correct Format")
-# ? low complexity가 없으면 없다고 출력
-# ? 4번이상반복되는 경우?
 
 import re
 import random
 import time
 
-start_time = time.time()
-
-genes = ['T','A','G','C']
-
-data_rand = ""
-num = 5000 # * How many genes you wanna make?
-while num:
-    data_rand += genes[random.randint(0,3)]
-    num -= 1
-
-data_rand += "AGCAGCAGCAGCTATATGCGCGCAGCAGCAGCTAGTAGTA G T GGTCC GGTCC G GT C CtTtTtT"
-#print(data)
-
-data_re = re.compile(r'([AGCT]{2,5})\1{2,}') # 왜 {2,}로 해야 잡힐까
-
-#test file
-data = ""
-filename = 'assignment1_input.txt'
-input_file = open(filename, 'r')
-
-with open(filename, 'r') as file:
-    line = None
-    line = file.readline() # comment
-    if(line[0] == '>'):
-        print("This is comment")
-    while line != '':
-        line = file.readline()
-        data += line.strip('\n')
-
-data += data_rand
-data = data.replace(" ", "")
-data = data.upper()
-print(">>>>",data)
-
-found_list = data_re.findall(data)
-
-print(found_list)
+def getDataFromFile(filename):
+    data = ""
+    try:
+        with open(filename, 'r') as file:
+            line = None
+            line = file.readline() # comment
+            if(line[0] == '>'): # * must accept only first FASTA format.
+                print("[Comment]")
+                print(line)
+            else:
+                print("No correct format . . .")
+            while line != '':
+                line = file.readline()
+                if line:
+                    if(line[0] == '>'):
+                        break
+                data += line.strip('\n')
+    except FileNotFoundError:
+        print("No input file . . .")
+        
+    return data
 
 
-start_offset = 0
-for v in found_list:
-    index = data.find(v*3, start_offset)
-    print("[index]", index, end=" ")
-    print("[pattern]", v*3)
-    print("\n")
-    start_offset = index + len(v)*3
-#print(index)
+def getRandomData(num):
+    
+    genes = ['T','A','G','C']
+    if num < 1:
+        print("Not generated random sequences . . .")
+        
+    data_rand = ""
+    
+    while num:
+        data_rand += genes[random.randint(0,3)]
+        num -= 1
+    
+    return data_rand
 
 
-print("Time Elapsed : ", time.time() - start_time)
+def main():
+    start_time = time.time()
+
+    data_re = re.compile(r'([AGCT]{2,5})\1{2,}') # 왜 {2,}로 해야 잡힐까
+    data_not = re.compile(r'[^AGCT]')
+    data = ""
+    filename = 'assignment1_input.txt'
+    #filename = 'no_exist_file.txt'
+    #filename = 'multiple.txt'
+    data += getDataFromFile(filename)
+    num = 500000 # * Generate num DNA Sequences.
+    data += getRandomData(num)
+    #data += "AGCAGCAGCAGCTATATGCGCGCAGCAGCAGCTAGTAGTA G T GGTCC GGTCC G GT C CtTtTtT" # ? for Exception Check
+    data += "AGCT"
+    data = data.replace(" ", "")
+    data = data.upper()
+    if not data:
+        print("No DNA Sequences . . .")
+        exit(1)
+    
+    print(">>>>",data)
+    no_dna = data_not.findall(data)
+    if no_dna:
+        print("No DNA Sequences . . .")
+        print(no_dna)
+        exit(1)
+    
+    found_list = data_re.findall(data)
+    if not found_list:
+        print("There is no Low Complexity . . .")
+        return
+
+    print(found_list)
+
+
+    start_offset = 0
+    for v in found_list:
+        index = data.find(v*3, start_offset)
+        print("[index]", index, end=" ")
+        print("[pattern]", v*3)
+        print("\n")
+        start_offset = index + len(v)*3
+    #print(index)
+
+
+    print("Time Elapsed : ", time.time() - start_time)
+
+if __name__ == '__main__':
+    main()
