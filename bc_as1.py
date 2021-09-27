@@ -59,10 +59,10 @@ def main():
     #filename = 'no_exist_file.txt'
     #filename = 'multiple.txt'
     data += getDataFromFile(filename)
-    num = 500000 # * Generate num DNA Sequences.
+    num = 10000 # * Generate num DNA Sequences.
     data += getRandomData(num)
     #data += "AGCAGCAGCAGCTATATGCGCGCAGCAGCAGCTAGTAGTA G T GGTCC GGTCC G GT C CtTtTtT" # ? for Exception Check
-    data += "AGCT"
+    #data += "AGCT"
     data = data.replace(" ", "")
     data = data.upper()
     if not data:
