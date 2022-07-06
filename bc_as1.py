@@ -52,7 +52,7 @@ def getRandomData(num):
 def main():
     start_time = time.time()
 
-    data_re = re.compile(r'([AGCT]{2,5})\1{2,}') # 왜 {2,}로 해야 잡힐까
+    data_re = re.compile(r'([AGCT]{2,5})\1{2,}')
     data_not = re.compile(r'[^AGCT]')
     data = ""
     filename = 'assignment1_input.txt'
